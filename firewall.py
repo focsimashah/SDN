@@ -20,15 +20,14 @@ import csv
 
 
 log = core.getLogger()
-policyFile = "%s/pox/pox/misc/firewall-policies.csv" % os.environ[ 'HOME' ]  
+policyFile = "%s/pox/pox/misc/firewall-policies.csv" % os.environ[ 'HOME' ]
 
 ''' Add your global variables here ... '''
 # Create a list of src/dst MAC Addr pairs to be blocked
 blockList=list()
 
-with open(policyFile,'rb') as f:
-    reader = csv.reader(f)
-    
+with open(policyFile) as f:
+    reader = csv.reader(f,delimiter=',') 
     # For each row in the csv file, read in all columns except for the 1st one
     for row in reader:
         blockList.append(row[1:])
@@ -43,7 +42,7 @@ class Firewall (EventMixin):
         self.listenTo(core.openflow)
         log.debug("Enabling Firewall Module")
 
-    def _handle_ConnectionUp (self, event):    
+    def _handle_ConnectionUp (self, event):
         ''' Add your logic here ... '''
         for sublist in blockList:
             # Create a block match
@@ -68,6 +67,6 @@ class Firewall (EventMixin):
 
 def launch ():
     '''
-    Starting the Firewall module
-    '''
+Starting the Firewall module
+'''
     core.registerNew(Firewall)
