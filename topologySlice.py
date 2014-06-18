@@ -41,6 +41,35 @@ class TopologySlice (EventMixin):
         log.debug("Switch %s has come up.", dpid)
         
         """ Add your logic here """
+        forwardRule = of.ofp_match()
+        fm = of.ofp_flow_mod()
+        
+        switch(event.dpid){
+            case 1:
+                forwardRule.dl_src = EthAddr("00:00:00:00:00:03")
+                forwardRule.dl_dst = EthAddr("00:00:00:00:00:01")
+                fm.match = forwardRule
+                fm.actions.append(of.ofp_action_output(port = 1))
+                event.connection.send(fm)
+                
+                forwardRule.dl_src = EthAddr("00:00:00:00:00:01")
+                forwardRule.dl_dst = EthAddr("00:00:00:00:00:03")
+                fm.match = forwardRule
+                fm.actions.append(of.ofp_action_output(port = 3))
+                event.connection.send(fm)
+                
+                forwardRule.dl_src = EthAddr("00:00:00:00:00:04")
+                forwardRule.dl_dst = EthAddr("00:00:00:00:00:02")
+                fm.match = forwardRule
+                fm.actions.append(of.ofp_action_output(port = 2))
+                event.connection.send(fm)
+                
+                forwardRule.dl_src = EthAddr("00:00:00:00:00:02")
+                forwardRule.dl_dst = EthAddr("00:00:00:00:00:04")
+                fm.match = forwardRule
+                fm.actions.append(of.ofp_action_output(port = 4))
+                event.connection.send(fm)
+                
         
 
         
