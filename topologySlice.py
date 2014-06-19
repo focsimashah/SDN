@@ -78,7 +78,7 @@ class TopologySlice (EventMixin):
             hb_fm2.actions.append(of.ofp_action_output(port=out_port))
             event.connection.send(hb_fm2)
         
-        elif dpid == '00-00-00-00-00-02' or '00-00-00-00-00-03':
+        elif dpid == '00-00-00-00-00-02' or dpid == '00-00-00-00-00-03':
             
             # Update the midway path for Switches 2 and 3 
             in_port = 1
