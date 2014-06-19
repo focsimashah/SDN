@@ -41,36 +41,105 @@ class TopologySlice (EventMixin):
         log.debug("Switch %s has come up.", dpid)
         
         """ Add your logic here """
-        forwardRule = of.ofp_match()
-        fm = of.ofp_flow_mod()
+        if dpid == '00-00-00-00-00-01':
+            # Update the low bandwidth path h1 -> h3
+            in_port = 3
+            out_port = 1
+            
+            lb_fm1 = of.ofp_flow_mod()
+            lb_fm1.match.in_port = in_port
+            lb_fm1.actions.append(of.ofp_action_output(port=out_port))
+            event.connection.send(lb_fm1)
+            
+            # Update the low bandwidth path h3 -> h1
+            in_port = 1
+            out_port = 3
+            
+            lb_fm2 = of.ofp_flow_mod()
+            lb_fm2.match.in_port = in_port
+            lb_fm2.actions.append(of.ofp_action_output(port=out_port))
+            event.connection.send(lb_fm2)
+            
+            # Update the high bandwidth path h2 -> h3
+            in_port = 4
+            out_port = 2
+            
+            hb_fm1 = of.ofp_flow_mod()
+            hb_fm1.match.in_port = in_port
+            hb_fm1.actions.append(of.ofp_action_output(port=out_port))
+            event.connection.send(hb_fm1)
+            
+            # Update the high bandwidth path h3 -> h2
+            in_port = 2
+            out_port =4
+            
+            hb_fm2 = of.ofp_flow_mod()
+            hb_fm2.match.in_port = in_port
+            hb_fm2.actions.append(of.ofp_action_output(port=out_port))
+            event.connection.send(hb_fm2)
         
-        switch(event.dpid){
-            case 1:
-                forwardRule.dl_src = EthAddr("00:00:00:00:00:03")
-                forwardRule.dl_dst = EthAddr("00:00:00:00:00:01")
-                fm.match = forwardRule
-                fm.actions.append(of.ofp_action_output(port = 1))
-                event.connection.send(fm)
-                
-                forwardRule.dl_src = EthAddr("00:00:00:00:00:01")
-                forwardRule.dl_dst = EthAddr("00:00:00:00:00:03")
-                fm.match = forwardRule
-                fm.actions.append(of.ofp_action_output(port = 3))
-                event.connection.send(fm)
-                
-                forwardRule.dl_src = EthAddr("00:00:00:00:00:04")
-                forwardRule.dl_dst = EthAddr("00:00:00:00:00:02")
-                fm.match = forwardRule
-                fm.actions.append(of.ofp_action_output(port = 2))
-                event.connection.send(fm)
-                
-                forwardRule.dl_src = EthAddr("00:00:00:00:00:02")
-                forwardRule.dl_dst = EthAddr("00:00:00:00:00:04")
-                fm.match = forwardRule
-                fm.actions.append(of.ofp_action_output(port = 4))
-                event.connection.send(fm)
-                
+        elif dpid == '00-00-00-00-00-02' or '00-00-00-00-00-03':
+            
+            # Update the midway path for Switches 2 and 3 
+            in_port = 1
+            out_port = 2
+            
+            mid_fm1 = of.ofp_flow_mod()
+            mid_fm1.match.in_port = in_port
+            mid_fm1.actions.append(of.ofp_action_output(port=out_port))
+            event.connection.send(mid_fm1)
+            
+            # Update the midway path for Switches 2 and 3 
+            in_port = 2
+            out_port = 1
+            
+            mid_fm2 = of.ofp_flow_mod()
+            mid_fm2.match.in_port = in_port
+            mid_fm2.actions.append(of.ofp_action_output(port=out_port))
+            event.connection.send(mid_fm2)
         
+        elif dpid == '00-00-00-00-00-04':
+            
+            # Update the low bandwidth path h1 -> h3
+            in_port = 3
+            out_port = 1
+            
+            lb_fm3 = of.ofp_flow_mod()
+            lb_fm3.match.in_port = in_port
+            lb_fm3.actions.append(of.ofp_action_output(port=out_port))
+            event.connection.send(lb_fm3)
+            
+            # Update the low bandwidth path h3 -> h1
+            in_port = 1
+            out_port = 3
+            
+            lb_fm4 = of.ofp_flow_mod()
+            lb_fm4.match.in_port = in_port
+            lb_fm4.actions.append(of.ofp_action_output(port=out_port))
+            event.connection.send(lb_fm4)
+            
+            # Update the high bandwidth path h2 -> h3
+            in_port = 4
+            out_port = 2
+            
+            hb_fm3 = of.ofp_flow_mod()
+            hb_fm3.match.in_port = in_port
+            hb_fm3.actions.append(of.ofp_action_output(port=out_port))
+            event.connection.send(hb_fm3)
+            
+            # Update the high bandwidth path h3 -> h2
+            in_port = 2
+            out_port =4
+            
+            hb_fm4 = of.ofp_flow_mod()
+            hb_fm4.match.in_port = in_port
+            hb_fm4.actions.append(of.ofp_action_output(port=out_port))
+            event.connection.send(hb_fm4)
+            
+        
+            
+            
+            
 
         
 
