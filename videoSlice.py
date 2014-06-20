@@ -40,11 +40,22 @@ class VideoSlice (EventMixin):
         '''
 
         self.portmap = { 
+                        # Video from h1 to h3 => forward to SW3
                         ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),
                          EthAddr('00:00:00:00:00:03'), 80): '00-00-00-00-00-03',
                         
                         """ Add your mapping logic here"""
+                        # Video from h1 to h4 => forward to SW3
+                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:01'),
+                         EthAddr('00:00:00:00:00:04'), 80): '00-00-00-00-00-03',
+                        # Video from h2 to h3 => forward to SW3
+                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:02'),
+                         EthAddr('00:00:00:00:00:03'), 80): '00-00-00-00-00-03',
+                        # Video from h2 to h4 => forward to SW3
+                        ('00-00-00-00-00-01', EthAddr('00:00:00:00:00:02'),
+                         EthAddr('00:00:00:00:00:04'), 80): '00-00-00-00-00-03',
                         
+                        # Do the same thing for SW3 and SW4?? and reverse?
                         }
 
     def _handle_LinkEvent (self, event):
